@@ -13,6 +13,11 @@ import java.awt.*;
  */
 public class GridPanel extends JPanel {
 
+    /**
+     * Paints the whole grid with all the alive and dead cells.
+     *
+     * @param graphics The graphics that will be used to draw an image.
+     */
     @Override
     protected void paintComponent(Graphics graphics) {
 
@@ -45,6 +50,11 @@ public class GridPanel extends JPanel {
 
     }
 
+    /**
+     * Returns the best size for when frame.pack() is called.
+     *
+     * @return Dimension
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(GameOfLife.getColumns() * GameOfLife.getResolution(), GameOfLife.getRows() * GameOfLife.getResolution());

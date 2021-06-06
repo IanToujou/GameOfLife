@@ -83,11 +83,17 @@ public class GameOfLife {
 
         Logger.log(LogLevel.INFORMATION, "Columns: " + columns + " | Rows: " + rows + " | Resolution: " + resolution);
         Logger.log(LogLevel.INFORMATION, "Starting simulation up to generation " + maxGeneration + "...");
-        start();
+        start(3000, 100);
 
     }
 
-    public static void start() {
+    /**
+     * This method starts the simulation by creating a timer task that will update the whole grid.
+     *
+     * @param delay The delay (in ms) before the simulation will start.
+     * @param period The interval (in ms) for every frame that will be rendered.
+     */
+    public static void start(int delay, int period) {
 
         draw(columns * resolution, rows * resolution);
         generation = 0;
@@ -119,7 +125,7 @@ public class GameOfLife {
 
                     for(int j = 0; j < rows; j++) {
 
-                        //Ignore edges
+                        //The edges will be ignored at the moment
                         if(i == 0 || i == (columns - 1) || j == 0 || j == (rows - 1)) {
 
                             nextGrid[i][j] = grid[i][j];
@@ -151,16 +157,29 @@ public class GameOfLife {
 
         };
 
-        timer.schedule(task, 3000, 100);
+        timer.schedule(task, delay, period);
 
     }
 
+    /**
+     * Creates a 2D array with a specified amount of rows and columns.
+     *
+     * @param columns The amount of columns for the 2D array.
+     * @param rows The amount of rows for the 2D array.
+     * @return int[][]
+     */
     public static int[][] create2DArray(int columns, int rows) {
 
         return new int[columns][rows];
 
     }
 
+    /**
+     * Creates a simple JFrame.
+     *
+     * @param name The name that will be displayed as window/frame title.
+     * @return JFrame
+     */
     public static JFrame createFrame(String name) {
 
         JFrame frame = new JFrame(name);
@@ -171,6 +190,12 @@ public class GameOfLife {
 
     }
 
+    /**
+     * Creates a buffered image to draw on. Also generates the png files if file export is turned on.
+     *
+     * @param width The width of the buffered image.
+     * @param height The height of the buffered image.
+     */
     public static void draw(int width, int height) {
 
         frame.add(new GridPanel(), generation);
@@ -213,6 +238,14 @@ public class GameOfLife {
 
     }
 
+    /**
+     * Counts the neighbors around a single cell. Neighbors are active cells in a 3x3 grid, of which the center cell is the input.
+     *
+     * @param grid The grid where the cells are on.
+     * @param x The x coordinate of the input cell.
+     * @param y The y coordinate of the input cell.
+     * @return int
+     */
     public static int countNeighbors(int[][] grid, int x, int y) {
 
         int sum = 0;
@@ -228,6 +261,12 @@ public class GameOfLife {
 
     }
 
+    /**
+     * Creates a gif out of the exported png sequence.
+     *
+     * @param fileName The file name for the exported gif.
+     * @throws IOException If the file cannot be created, the method will throw an IOException.
+     */
     public static void createGIF(String fileName) throws IOException {
 
         Logger.log(LogLevel.INFORMATION, "Generating a gif out of the PNG sequence...");
