@@ -3,10 +3,12 @@ package net.toujoustudios.gameoflife.main;
 import net.toujoustudios.gameoflife.log.LogLevel;
 import net.toujoustudios.gameoflife.log.Logger;
 import net.toujoustudios.gameoflife.util.GIFSequenceWriter;
+import net.toujoustudios.gameoflife.window.GridPanel;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,8 +24,9 @@ import java.util.TimerTask;
  * Time: 11:11
  * Project: GameOfLife
  */
-public class Main {
+public class GameOfLife {
 
+    private final static boolean generateFile = false;
     private final static String imageFile = "export_image_GEN.png";
     private final static String gifFile = "export.gif";
     private static int resolution = 10;
@@ -33,8 +36,11 @@ public class Main {
 
     private static int[][] grid;
     private static int generation;
+    private static JFrame frame;
 
     public static void main(String[] args) {
+
+        frame = createFrame("GameOfLife");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -93,11 +99,15 @@ public class Main {
             public void run() {
 
                 if(generation >= maxGeneration) {
-                    try {
-                        createGIF(gifFile);
-                    } catch(IOException e) {
-                        e.printStackTrace();
+
+                    if(generateFile) {
+                        try {
+                            createGIF(gifFile);
+                        } catch(IOException e) {
+                            e.printStackTrace();
+                        }
                     }
+
                     System.exit(0);
                 }
 
@@ -151,37 +161,54 @@ public class Main {
 
     }
 
+    public static JFrame createFrame(String name) {
+
+        JFrame frame = new JFrame(name);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        return frame;
+
+    }
+
     public static void draw(int width, int height) {
 
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = bufferedImage.createGraphics();
+        frame.add(new GridPanel(), generation);
+        frame.pack();
 
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, 0, width, height);
+        if(generateFile) {
 
-        for(int i = 0; i < columns; i++) {
-            for(int j = 0; j < rows; j++) {
+            BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = bufferedImage.createGraphics();
 
-                int x = j * resolution;
-                int y = i * resolution;
+            graphics.setColor(Color.WHITE);
+            graphics.fillRect(0, 0, width, height);
 
-                graphics.setColor(new Color(248, 30, 109));
-                if(grid[i][j] == 1) graphics.fillRect(x, y, resolution, resolution);
+            for(int i = 0; i < columns; i++) {
+                for(int j = 0; j < rows; j++) {
 
-                graphics.setColor(Color.BLACK);
-                graphics.drawLine(x, y, x, height);
-                graphics.drawLine(x, y, width, y);
+                    int x = j * resolution;
+                    int y = i * resolution;
 
+                    graphics.setColor(new Color(248, 30, 109));
+                    if(grid[i][j] == 1) graphics.fillRect(x, y, resolution, resolution);
+
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawLine(x, y, x, height);
+                    graphics.drawLine(x, y, width, y);
+
+                }
             }
-        }
 
-        graphics.dispose();
-        File file = new File(imageFile.replace("GEN", String.valueOf(generation)));
+            graphics.dispose();
 
-        try {
-            ImageIO.write(bufferedImage, "png", file);
-        } catch(IOException e) {
-            e.printStackTrace();
+            File file = new File(imageFile.replace("GEN", String.valueOf(generation)));
+            try {
+                ImageIO.write(bufferedImage, "png", file);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
@@ -225,6 +252,30 @@ public class Main {
 
         Logger.log(LogLevel.INFORMATION, "GIF generation finished.");
 
+    }
+
+    public static int[][] getGrid() {
+        return grid;
+    }
+
+    public static int getColumns() {
+        return columns;
+    }
+
+    public static int getRows() {
+        return rows;
+    }
+
+    public static int getResolution() {
+        return resolution;
+    }
+
+    public static int getMaxGeneration() {
+        return maxGeneration;
+    }
+
+    public static int getGeneration() {
+        return generation;
     }
 
 }
