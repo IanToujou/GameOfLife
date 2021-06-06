@@ -107,11 +107,11 @@ public class GameOfLife {
                             e.printStackTrace();
                         }
                     }
-
                     System.exit(0);
+
                 }
 
-                Logger.log(LogLevel.INFORMATION, "Calculating and drawing generation " + generation + "...");
+                Logger.log(LogLevel.INFORMATION, "Calculating and drawing generation " + generation + ".");
 
                 int[][] nextGrid = create2DArray(columns, rows);
 
@@ -277,5 +277,9 @@ public class GameOfLife {
     public static int getGeneration() {
         return generation;
     }
+
+    public static String getGifFile() { return gifFile; }
+
+    public static String getImageFile() { return imageFile; }
 
 }

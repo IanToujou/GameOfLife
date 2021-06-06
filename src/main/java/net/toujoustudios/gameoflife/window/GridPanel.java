@@ -45,7 +45,6 @@ public class GridPanel extends JPanel {
 
     }
 
-    //so our panel is the corerct size when pack() is called on Jframe
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(GameOfLife.getColumns() * GameOfLife.getResolution(), GameOfLife.getRows() * GameOfLife.getResolution());
