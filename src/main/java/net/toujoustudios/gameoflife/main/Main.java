@@ -17,6 +17,7 @@ import java.util.Random;
 public class Main {
 
     private final static String fileName = "export_image.png";
+    private final static int resolution = 30;
 
     private final static int columns = 20;
     private final static int rows = 20;
@@ -38,7 +39,7 @@ public class Main {
         String print = Arrays.deepToString(grid).replace("], ", "]\n");
         System.out.println(print);
 
-        draw(columns, rows);
+        draw(columns * resolution, rows * resolution);
 
     }
 
@@ -55,12 +56,19 @@ public class Main {
 
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, width, height);
-        graphics.setColor(Color.BLACK);
 
         for(int i = 0; i < columns; i++) {
             for(int j = 0; j < rows; j++) {
 
-                if(grid[i][j] == 1) graphics.drawRect(j, i, 0, 0);
+                int x = j * resolution;
+                int y = i * resolution;
+
+                graphics.setColor(Color.DARK_GRAY);
+                if(grid[i][j] == 1) graphics.fillRect(x, y, resolution, resolution);
+
+                graphics.setColor(Color.BLACK);
+                graphics.drawLine(x, y, x, height);
+                graphics.drawLine(x, y, width, y);
 
             }
         }
